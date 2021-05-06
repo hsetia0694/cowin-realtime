@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppService } from './app.service';
+import { ToastrService } from 'ngx-toastr';
 type Moment = moment.Moment;
 
 @Component({
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   vaccinationCenter: FormGroup;
 
   constructor(private readonly fb: FormBuilder,
+    private readonly toastr: ToastrService,
     private readonly service: AppService) { }
 
   ngOnInit() {
@@ -36,6 +38,9 @@ export class AppComponent implements OnInit {
     let params = `?pincode=${data.pin}&date=${data.date.startDate.format('DD-MM-YYYY')}`;
     this.service.getData(params).subscribe(response => {      
       this.sessionData = response.sessions.filter(e => e.available_capacity >= 1);
+      if(!this.sessionData.length){
+        this.toastr.error('No vaccination center available in this area.')
+      }
       this.dataFetched = true;
     })
   }
