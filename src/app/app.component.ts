@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     console.log(data)
     let params = `?pincode=${data.pin}&date=${data.date.startDate.format('DD-MM-YYYY')}`;
     this.service.getData(params).subscribe(response => {      
-      this.sessionData = response.sessions;
+      this.sessionData = response.sessions.filter(e => e.available_capacity >= 1);
       this.dataFetched = true;
     })
   }
